@@ -19,11 +19,13 @@ class Environment():
         plt.figure()
         plt.xlim(0, self.xmax)
         plt.ylim(0, self.ymax)
+        plt.xticks(np.arange(0, self.xmax + 1, step=1))
+        plt.yticks(np.arange(0, self.ymax + 1, step=1))
         plt.gca().set_aspect('equal', adjustable='box')
 
     def is_valid_move(self, point):
         x, y = point
-        if ((x <= 0) | (y <= 0) | (x > self.xmax) | (y > self.ymax)):
+        if ((x <= 0) | (y <= 0) | (x >= self.xmax) | (y >= self.ymax)):
             return False
         for polygon in self.polygon_list:
             if polygon.is_inside(point) == True:
