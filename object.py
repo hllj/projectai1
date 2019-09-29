@@ -21,6 +21,7 @@ class Polygon():
     def __init__(self, coord)   :
         self.coord = coord
         self.n_coord = len(coord)
+        self.area = self.area_cal()
 
     def draw(self):
         point_list = self.coord
@@ -30,7 +31,7 @@ class Polygon():
         # plt.figure()
         plt.plot(xs, ys)
 
-    def area(self):
+    def area_cal(self):
         area_polygon = 0
         for i in range(0, self.n_coord - 1):
             d_1 = distance(self.coord[0], self.coord[i])
@@ -50,7 +51,7 @@ class Polygon():
             d_1_2 = distance(self.coord[i], self.coord[i_next])
             test_area += Heron(d_1, d_2, d_1_2)
 
-        if (np.abs(test_area - self.area()) <= EPS):
+        if (np.abs(test_area - self.area) <= EPS):
             return True
         else:
             return False
