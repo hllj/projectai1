@@ -85,7 +85,7 @@ class UCS(Algorithm):
                 w_move = 1
                 if ((i == 0) | (i == 2) | (i == 4) | (i == 6)): #cross move
                     w_move = 1.5
-                if (self.E.is_valid_move(next_p) == True):
+                if ((self.E.is_valid_point(next_p) == True) & (self.E.is_valid_move(p, next_p))):
                     if ((self.fre[next_p] == 1) & (self.d[next_p] > self.d[p] + w)):
                         self.d[next_p] = self.d[p] + w_move
                         heapq.heappush(pq, (self.d[next_p], next_p))
@@ -96,10 +96,11 @@ class UCS(Algorithm):
 
 if __name__ == '__main__':
     xmax, ymax = 22, 18
-    start_point, end_point = (2, 2), (19, 16)
+    start_point, end_point = (10, 1), (19, 16)
     polygon_point_list = np.array([[[4, 4], [5, 9], [8, 10], [9, 5]]
                                       , [[8, 12], [8, 17], [13, 12]]
-                                      , [[11, 1], [11, 6], [14, 6], [14, 1]]])
+                                      , [[11, 1], [11, 6], [14, 6], [14, 1]]
+                                      , [[15, 11], [12, 9], [15, 6], [19, 10]]])
 
     polygon_list_object = np.array([])
 

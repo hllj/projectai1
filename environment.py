@@ -23,7 +23,7 @@ class Environment():
         plt.yticks(np.arange(0, self.ymax + 1, step=1))
         plt.gca().set_aspect('equal', adjustable='box')
 
-    def is_valid_move(self, point):
+    def is_valid_point(self, point):
         x, y = point
         if ((x <= 0) | (y <= 0) | (x >= self.xmax) | (y >= self.ymax)):
             return False
@@ -32,6 +32,13 @@ class Environment():
                 return False
 
         return True
+
+    def is_valid_move(self, p0, p1):
+        for polygon in self.polygon_list:
+            if (polygon.is_cut(p0, p1) == True): #If There is a polygon that cut (p0, p1) line => False move
+                return False
+        return True
+
 
     def draw_environment(self):
         for polygon in self.polygon_list:
@@ -52,9 +59,9 @@ class Environment():
 # xmax, ymax = 22, 18
 # start_point, end_point = (2, 2), (19, 16)
 # polygon_point_list = np.array([[[4, 4], [5, 9], [8, 10], [9, 5]]
-#                         , [[8, 12], [8, 17], [13, 12]]
-#                         , [[11, 1], [11, 6], [14, 6], [14, 1]]])
-#
+#                                       , [[8, 12], [8, 17], [13, 12]]
+#                                       , [[11, 1], [11, 6], [14, 6], [14, 1]]
+#                                       , [[12, 11], [14, 8], [15, 6], [19, 10]]])
 # polygon_list_object = np.array([])
 #
 #
@@ -67,10 +74,15 @@ class Environment():
 #
 # E.draw_environment()
 #
-# path = np.array([[2, 2], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3], [9, 4], [10, 5], [10, 6], [10, 7],
-#         [11, 8], [12, 9], [13, 10], [14, 11], [15, 12], [16, 13], [17, 14], [18, 15], [19, 16]])
+# # path = np.array([[2, 2], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3], [9, 4], [10, 5], [10, 6], [10, 7],
+# #         [11, 8], [12, 9], [13, 10], [14, 11], [15, 12], [16, 13], [17, 14], [18, 15], [19, 16]])
+# #
+# # E.draw_path(path)
 #
-# E.draw_path(path)
+# plt.scatter(14, 11, color='r')
+# plt.scatter(13, 10, color='r')
 # E.end_draw()
 #
-# print("Testing valid move", E.is_valid_move((6, 6)))
+# print("Testing valid move", E.is_valid_point((13, 10)))
+# print("Testing valid move", E.is_valid_point((14, 11)))
+# print("Testing valid move", E.is_valid_move((13, 10), (14, 11)))

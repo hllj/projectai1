@@ -17,6 +17,16 @@ def distance(p1, p2):
     x2, y2 = p2
     return np.sqrt(np.power(x1 - x2, 2) + np.power(y1 - y2, 2))
 
+def is_same_side(a, b, x_t, y_t, p0, p1):
+    x0, y0 = p0
+    x1, y1 = p1
+    v_0 = -b * (x0 - x_t) + a * (y0 - y_t)
+    v_1 = -b * (x1 - x_t) + a * (y1 - y_t)
+    if v_0 * v_1 > 0:
+        return True
+    else:
+        return False
+
 class Polygon():
     def __init__(self, coord)   :
         self.coord = coord
@@ -52,6 +62,23 @@ class Polygon():
             test_area += Heron(d_1, d_2, d_1_2)
 
         if (np.abs(test_area - self.area) <= EPS):
+            return True
+        else:
+            return False
+
+    def is_cut(self, p0, p1):
+        x0, y0 = p0
+        x1, y1 = p1
+        cut_count = 0
+        for i in range(0, self.n_coord):
+            i_next = (i + 1) % self.n_coord
+            xi, yi = self.coord[i]
+            xi_next, yi_next = self.coord[i_next]
+            t1 = is_same_side(x0 - x1, y0 - y1, x0, y0, self.coord[i], self.coord[i_next])
+            t2 = is_same_side(xi - xi_next, yi - yi_next, xi, yi, p0, p1)
+            if ((t1 == False) & (t2 == False)):
+                cut_count += 1
+        if (cut_count >= 2):
             return True
         else:
             return False
