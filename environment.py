@@ -24,6 +24,7 @@ class Environment():
         plt.gca().set_aspect('equal', adjustable='box')
 
     def is_valid_point(self, point):
+
         x, y = point
         if ((x <= 0) | (y <= 0) | (x >= self.xmax) | (y >= self.ymax)):
             return False
