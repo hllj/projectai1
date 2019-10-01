@@ -82,7 +82,7 @@ class UCS(Algorithm):
 
             if (self.fre[p] == 0): continue
             if (p == self.end_point): break
-
+            self.fre[p] = 0
             px, py = p
             for i in range(8):
                 next_p = (px + dx[i], py + dy[i])
@@ -146,7 +146,7 @@ class ASTAR(Algorithm):
 
             if (self.fre[p] == 0): continue
             if (p == self.end_point): break
-
+            self.fre[p] = 0
             px, py = p
             for i in range(8):
                 next_p = (px + dx[i], py + dy[i])
@@ -162,7 +162,8 @@ class ASTAR(Algorithm):
         self.cost = self.d[self.end_point]
         self.imitate_environment()
 
-
+class BFS(Algorithm):
+    pass
 
 if __name__ == '__main__':
     xmax, ymax = 22, 18
@@ -183,3 +184,6 @@ if __name__ == '__main__':
 
     AstarAlgo = ASTAR(xmax, ymax, start_point, end_point, polygon_list_object)
     AstarAlgo.run()
+
+    UCSAlgo = UCS(xmax, ymax, start_point, end_point, polygon_list_object)
+    UCSAlgo.run()
