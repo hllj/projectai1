@@ -163,7 +163,13 @@ class ASTAR(Algorithm):
         self.imitate_environment()
 
 class BFS(Algorithm):
-    pass
+    def __init__(self, xmax, ymax, start_point, end_point, polygon_list):
+        super().__init__(xmax, ymax, start_point, end_point, polygon_list)
+        for i in range(xmax + 1):
+            for j in range(ymax + 1):
+                self.fre[(i, j)] = 1
+                self.trace[(i, j)] = -1
+
 
 if __name__ == '__main__':
     xmax, ymax = 22, 18
