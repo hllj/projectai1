@@ -9,8 +9,8 @@ from object import Polygon
 from ucs import UCS
 from astar import ASTAR
 from bfs import BFS
+from route import Route
 
-import time
 
 import numpy as np
 
@@ -23,6 +23,7 @@ if __name__ == '__main__':
                                       , [[11, 1], [11, 6], [14, 6], [14, 1]]
                                       , [[15, 11], [12, 9], [15, 6], [19, 10]]
                                     , [[2,3], [3,3],[4,0],[2,0]]])
+    check_point_list = [(2, 7), (12, 17), (17, 2)]
 
     polygon_list_object = np.array([])
 
@@ -31,17 +32,20 @@ if __name__ == '__main__':
         P = Polygon(polygon_coord)
         polygon_list_object = np.append(polygon_list_object, [P])
 
-    time_start = time.time()
+
     AstarAlgo = ASTAR(xmax, ymax, start_point, end_point, polygon_list_object)
     AstarAlgo.run()
-    print("Time processing of A* : %.2f" % (time.time() - time_start))
+    AstarAlgo.imitate_environment()
 
-    time_start = time.time()
-    UCSAlgo = UCS(xmax, ymax, start_point, end_point, polygon_list_object)
-    UCSAlgo.run()
-    print("Time processing of UCS : %.2f" % (time.time() - time_start))
+    r =Route(xmax, ymax, start_point, end_point, polygon_list_object, check_point_list)
+    print(r.matrix_cost)
 
-    time_start = time.time()
-    BFSAlgo = BFS(xmax, ymax, start_point, end_point, polygon_list_object)
-    BFSAlgo.run()
-    print("Time processing of BFS : %.2f" % (time.time() - time_start))
+    # time_start = time.time()
+    # UCSAlgo = UCS(xmax, ymax, start_point, end_point, polygon_list_object)
+    # UCSAlgo.run()
+    # print("Time processing of UCS : %.2f" % (time.time() - time_start))
+    #
+    # time_start = time.time()
+    # BFSAlgo = BFS(xmax, ymax, start_point, end_point, polygon_list_object)
+    # BFSAlgo.run()
+    # print("Time processing of BFS : %.2f" % (time.time() - time_start))

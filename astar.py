@@ -1,6 +1,6 @@
 from algorithm import Algorithm
 from object import distance
-
+import time
 import heapq
 import numpy as np
 
@@ -41,13 +41,13 @@ class ASTAR(Algorithm):
             # for p in trace_path:
             #     print(p)
             # print(trace_path)
+
             return np.array(trace_path)
 
-    def total_cost(self):
-        return self.d[self.end_point]
+
 
     def run(self):
-
+        time_start = time.time()
         pq = []
         heapq.heappush(pq, (self.f[self.start_point], self.start_point))
         while len(pq) > 0:
@@ -69,5 +69,6 @@ class ASTAR(Algorithm):
                         heapq.heappush(pq, (self.f[next_p], next_p))
                         self.trace[next_p] = p
         self.cost = self.d[self.end_point]
-        print("Total cost : ", self.cost)
-        self.imitate_environment()
+        self.timeProcessing = (time.time() - time_start)
+
+
