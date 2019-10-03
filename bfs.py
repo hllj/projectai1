@@ -1,6 +1,7 @@
 from algorithm import Algorithm
 import queue
 import numpy as np
+import time
 
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
@@ -35,6 +36,7 @@ class BFS(Algorithm):
             return np.array(trace_path)
 
     def run(self):
+        time_start = time.time()
         Q = queue.Queue()
         Q.put(self.start_point)
         while (not Q.empty()):
@@ -49,5 +51,4 @@ class BFS(Algorithm):
                         self.fre[next_p] = 0
                         self.trace[next_p] = (px, py)
                         Q.put(next_p)
-
-        self.imitate_environment()
+        self.timeProcessing = (time.time() - time_start)

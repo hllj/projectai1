@@ -1,6 +1,7 @@
 from algorithm import Algorithm
 import heapq
 import numpy as np
+import time
 
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
@@ -37,7 +38,7 @@ class UCS(Algorithm):
             return np.array(trace_path)
 
     def run(self):
-        print("UCS Algorithm:\n")
+        time_start = time.time()
         pq = []
         heapq.heappush(pq, (0, self.start_point))
         while len(pq) > 0:
@@ -62,5 +63,5 @@ class UCS(Algorithm):
                         heapq.heappush(pq, (self.d[next_p], next_p))
                         self.trace[next_p] = p
         self.cost = self.d[self.end_point]
-        print("Total Cost: ", self.cost)
-        self.imitate_environment()
+        self.timeProcessing = (time.time() - time_start)
+        # self.imitate_environment()

@@ -10,6 +10,7 @@ from environment import Environment
 from ucs import UCS
 from astar import ASTAR
 from bfs import BFS
+from route import Route
 
 import time
 
@@ -53,17 +54,25 @@ if __name__ == '__main__':
 
     Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
 
-    time_start = time.time()
-    AstarAlgo = ASTAR(start_point, end_point, Env)
-    AstarAlgo.run()
-    print("Time processing of A* : %.2f" % (time.time() - time_start))
+    # AstarAlgo = ASTAR(start_point, end_point, Env)
+    # print("A star Algorithm:")
+    # AstarAlgo.run()
+    # print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
+    # AstarAlgo.imitate_environment()
+    # print("A-star Algorithm 's Cost:", AstarAlgo.cost)
+    #
+    # print("UCS Algorithm:")
+    # UCSAlgo = UCS(start_point, end_point, Env)
+    # UCSAlgo.run()
+    # print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
+    # UCSAlgo.imitate_environment()
+    # print("UCS Algorithm 's Cost:", UCSAlgo.cost)
+    #
+    # print("BFS Algorithm:")
+    # BFSAlgo = BFS(start_point, end_point, Env)
+    # BFSAlgo.run()
+    # print("Time processing of BFS : %.2f" % (BFSAlgo.timeProcessing))
+    # BFSAlgo.imitate_environment()
 
-    time_start = time.time()
-    UCSAlgo = UCS(start_point, end_point, Env)
-    UCSAlgo.run()
-    print("Time processing of UCS : %.2f" % (time.time() - time_start))
-
-    time_start = time.time()
-    BFSAlgo = BFS(start_point, end_point, Env)
-    BFSAlgo.run()
-    print("Time processing of BFS : %.2f" % (time.time() - time_start))
+    R = Route(Env)
+    R.run()
