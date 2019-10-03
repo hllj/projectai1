@@ -9,13 +9,13 @@ dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
 
 class ASTAR(Algorithm):
-    def __init__(self, xmax, ymax, start_point, end_point, polygon_list):
-        super().__init__(xmax, ymax, start_point, end_point, polygon_list)
+    def __init__(self, start_point, end_point, ENV):
+        super().__init__(start_point, end_point, ENV)
         self.d = {}
         self.h = {}
         self.f = {}
-        for i in range(xmax + 1):
-            for j in range(ymax + 1):
+        for i in range(self.E.xmax + 1):
+            for j in range(self.E.ymax + 1):
                 self.d[(i, j)] = WMAX
                 self.h[(i, j)] = distance((i, j), end_point)
                 self.f[(i, j)] = WMAX

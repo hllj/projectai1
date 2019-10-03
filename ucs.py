@@ -7,11 +7,11 @@ dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
 
 class UCS(Algorithm):
-    def __init__(self, xmax, ymax, start_point, end_point, polygon_list):
-        super().__init__(xmax, ymax, start_point, end_point, polygon_list)
+    def __init__(self, start_point, end_point, ENV):
+        super().__init__(start_point, end_point, ENV)
         self.d = {}
-        for i in range(xmax + 1):
-            for j in range(ymax + 1):
+        for i in range(self.E.xmax + 1):
+            for j in range(self.E.ymax + 1):
                 self.d[(i, j)] = WMAX
                 self.fre[(i, j)] = 1
                 self.trace[(i, j)] = -1
