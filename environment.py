@@ -9,19 +9,13 @@ import matplotlib.pyplot as plt
 from object import Polygon
 
 class Environment():
-    def __init__(self, xmax, ymax, start_point, end_point, polygon_list):
+    def __init__(self, xmax, ymax, start_point, end_point, polygon_list, place):
         self.xmax = xmax
         self.ymax = ymax
         self.start_point = start_point
         self.end_point = end_point
         self.polygon_list = polygon_list
-
-        plt.figure()
-        plt.xlim(0, self.xmax)
-        plt.ylim(0, self.ymax)
-        plt.xticks(np.arange(0, self.xmax + 1, step=1))
-        plt.yticks(np.arange(0, self.ymax + 1, step=1))
-        plt.gca().set_aspect('equal', adjustable='box')
+        self.place = place;
 
     def is_valid_point(self, point):
 
@@ -42,13 +36,21 @@ class Environment():
 
 
     def draw_environment(self):
+        plt.figure()
+        plt.xlim(0, self.xmax)
+        plt.ylim(0, self.ymax)
+        plt.xticks(np.arange(0, self.xmax + 1, step=1))
+        plt.yticks(np.arange(0, self.ymax + 1, step=1))
+        plt.gca().set_aspect('equal', adjustable='box')
+
         for polygon in self.polygon_list:
             polygon.draw()
 
-        plt.scatter(self.start_point[0], self.start_point[1])
-        plt.scatter(self.start_point[0], self.start_point[1] + 0.5, marker="$S$")
-        plt.scatter(self.end_point[0], self.end_point[1])
-        plt.scatter(self.end_point[0], self.end_point[1] + 0.5, marker="$G$")
+    def draw_place(self):
+        for (i, point) in enumerate(self.place):
+            plt.scatter(point[0], point[1], c='r')
+            mk = "$" + str(i) + "$"
+            plt.scatter(point[0], point[1] + 0.5, marker=mk, c='r')
 
     def draw_path(self, path):
         xs, ys = zip(*path)
