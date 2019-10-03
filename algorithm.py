@@ -1,5 +1,6 @@
 from environment import Environment
 import matplotlib.pyplot as plt
+
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
@@ -12,14 +13,14 @@ class Algorithm():
         self.path = []
         self.fre = {}
         self.trace = {}
-
+        self.timeProcessing = 0
+        self.cost = 0
     def output(self):
         pass
 
     def run(self):
         pass
-    def total_cost(self):
-        pass
+
 
     def draw_start_end(self):
         plt.scatter(self.start_point[0], self.start_point[1])
