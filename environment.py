@@ -54,38 +54,4 @@ class Environment():
 
     def draw_path(self, path):
         xs, ys = zip(*path)
-        plt.plot(xs, ys, color='r')
-
-    def end_draw(self):
-        plt.show()
-
-# xmax, ymax = 22, 18
-# start_point, end_point = (2, 2), (19, 16)
-# polygon_point_list = np.array([[[4, 4], [5, 9], [8, 10], [9, 5]]
-#                                       , [[8, 12], [8, 17], [13, 12]]
-#                                       , [[11, 1], [11, 6], [14, 6], [14, 1]]
-#                                       , [[12, 11], [14, 8], [15, 6], [19, 10]]])
-# polygon_list_object = np.array([])
-#
-#
-# for polygon_coord in polygon_point_list:
-#     print(polygon_coord)
-#     P = Polygon(polygon_coord)
-#     polygon_list_object = np.append(polygon_list_object, [P])
-#
-# E = Environment(xmax, ymax, start_point, end_point, polygon_list_object)
-#
-# E.draw_environment()
-#
-# # path = np.array([[2, 2], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3], [9, 4], [10, 5], [10, 6], [10, 7],
-# #         [11, 8], [12, 9], [13, 10], [14, 11], [15, 12], [16, 13], [17, 14], [18, 15], [19, 16]])
-# #
-# # E.draw_path(path)
-#
-# plt.scatter(14, 11, color='r')
-# plt.scatter(13, 10, color='r')
-# E.end_draw()
-#
-# print("Testing valid move", E.is_valid_point((13, 10)))
-# print("Testing valid move", E.is_valid_point((14, 11)))
-# print("Testing valid move", E.is_valid_move((13, 10), (14, 11)))
+        plt.plot(xs, ys, color='b')

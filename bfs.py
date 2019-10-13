@@ -2,6 +2,7 @@ from algorithm import Algorithm
 import queue
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
@@ -27,12 +28,7 @@ class BFS(Algorithm):
                 self.end_point = self.trace[self.end_point]
 
             trace_path.append(self.start_point)
-            # trace_path = reversed(trace_path)
-            # for p in trace_path:
-            #     print(p)
             print("Length path: ", len(trace_path) - 2)
-            # print(trace_path)
-
             return np.array(trace_path)
 
     def run(self):
@@ -47,8 +43,14 @@ class BFS(Algorithm):
                 next_p = (px + dx[i], py + dy[i])
                 w_move = 1
                 if ((self.E.is_valid_point(next_p) == True) & (self.E.is_valid_move((px, py), next_p))):
-                    if self.fre[next_p] == 1 :
+                    if self.fre[next_p] == 1:
                         self.fre[next_p] = 0
                         self.trace[next_p] = (px, py)
                         Q.put(next_p)
+                        plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
+                        plt.pause(0.00000001)
         self.timeProcessing = (time.time() - time_start)
+        path = self.output()
+        self.E.draw_path(path)
+        plt.show()
+

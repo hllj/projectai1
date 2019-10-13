@@ -2,6 +2,7 @@ from algorithm import Algorithm
 import heapq
 import numpy as np
 import time
+import matplotlib.pyplot as plt
 
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
@@ -31,10 +32,7 @@ class UCS(Algorithm):
                 self.end_point = self.trace[self.end_point]
 
             trace_path.append(self.start_point)
-            # trace_path = reversed(trace_path)
-            # for p in trace_path:
-            #     print(p)
-            # print(trace_path)
+            print("Length path: ", len(trace_path) - 2)
             return np.array(trace_path)
 
     def run(self):
@@ -44,10 +42,6 @@ class UCS(Algorithm):
         while len(pq) > 0:
             w, p = heapq.heappop(pq)
 
-            # print("Choose ", p)
-            # print("Cost at choose point: ", self.d[p])
-            if (self.d[p] != w):
-                continue
             if (self.fre[p] == 0): continue
             if (p == self.end_point): break
             self.fre[p] = 0
@@ -62,6 +56,11 @@ class UCS(Algorithm):
                         self.d[next_p] = self.d[p] + w_move
                         heapq.heappush(pq, (self.d[next_p], next_p))
                         self.trace[next_p] = p
+                        plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
+                        plt.pause(0.00000001)
+
         self.cost = self.d[self.end_point]
         self.timeProcessing = (time.time() - time_start)
-        # self.imitate_environment()
+        path = self.output()
+        self.E.draw_path(path)
+        plt.show()

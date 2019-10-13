@@ -15,12 +15,6 @@ class Algorithm():
         self.trace = {}
         self.timeProcessing = 0
         self.cost = 0
-    def output(self):
-        pass
-
-    def run(self):
-        pass
-
 
     def draw_start_end(self):
         plt.scatter(self.start_point[0], self.start_point[1])
@@ -34,7 +28,3 @@ class Algorithm():
         self.draw_start_end()
         if (len(self.E.place) > 0):
             self.E.draw_place()
-        self.path = self.output()
-        if (len(self.path) != 0):
-            self.E.draw_path(self.path)
-        self.E.end_draw()
