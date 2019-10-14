@@ -38,7 +38,7 @@ class Route():
             for j in range(i + 1, n):
                 if i != j:
                     astarAlgo = ASTAR(self.all_point_list[i], self.all_point_list[j], self.E)
-                    astarAlgo.run()
+                    astarAlgo.run(0)
                     self.matrix_cost[i][j] = astarAlgo.cost
                     self.matrix_cost[j][i] = self.matrix_cost[i][j]
                     self.matrix_path[i][j] = astarAlgo.output()
@@ -106,9 +106,12 @@ class Route():
         if (path_list, cost) == (None, None):
             print("There is no path through required points!")
         else:
+
             print(path_list)
             for path in path_list:
                 self.E.draw_path(path)
+
             print("Total Cost %.2f" % (cost))
-        self.E.end_draw()
+            plt.show()
+        #self.E.end_draw()
 

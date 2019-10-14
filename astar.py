@@ -46,7 +46,7 @@ class ASTAR(Algorithm):
                 print("Length path: ", len(trace_path) - 2)
                 return np.array(trace_path)
 
-    def run(self):
+    def run(self, mode = 1):
         time_start = time.time()
         pq = []
         heapq.heappush(pq, (self.f[self.start_point], self.start_point))
@@ -73,14 +73,18 @@ class ASTAR(Algorithm):
                     if ((self.fre[next_p] == 1) & (self.d[next_p] > self.d[p] + w_move)):
                         self.d[next_p] = self.d[p] + w_move
                         self.f[next_p] = self.d[p] + w_move + self.h[next_p]
+
                         heapq.heappush(pq, (self.f[next_p], next_p))
                         self.trace[next_p] = p
-                        plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
-                        plt.pause(0.00000001)
+                        if mode :
+                            plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
+                            plt.pause(0.00000001)
         self.cost = self.d[self.end_point]
         self.timeProcessing = (time.time() - time_start)
-        path = self.output()
-        self.E.draw_path(path)
-        plt.show()
+
+        if mode:
+            path = self.output()
+            self.E.draw_path(path)
+            plt.show()
 
 

@@ -11,6 +11,7 @@ from ucs import UCS
 from astar import ASTAR
 from bfs import BFS
 from route import Route
+import matplotlib.pyplot as plt
 
 
 import numpy as np
@@ -54,25 +55,26 @@ if __name__ == '__main__':
 
     Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
 
-    AstarAlgo = ASTAR(start_point, end_point, Env)
-    print("A star Algorithm:")
-    AstarAlgo.imitate_environment()
-    AstarAlgo.run()
+    # AstarAlgo = ASTAR(start_point, end_point, Env)
+    # print("A star Algorithm:")
+    # AstarAlgo.imitate_environment()
+    # AstarAlgo.run(0)
+
     # print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
-    # print("A-star Algorithm 's Cost:", AstarAlgo.cost)
+    #print("A-star Algorithm 's Cost:", AstarAlgo.cost)
+    #
+    # print("UCS Algorithm:")
+    # UCSAlgo = UCS(start_point, end_point, Env)
+    # UCSAlgo.imitate_environment()
+    # UCSAlgo.run()
+    # # print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
+    # # print("UCS Algorithm 's Cost:", UCSAlgo.cost)
+    #
+    #
+    # print("BFS Algorithm:")
+    # BFSAlgo = BFS(start_point, end_point, Env)
+    # BFSAlgo.imitate_environment()
+    # BFSAlgo.run()
 
-    print("UCS Algorithm:")
-    UCSAlgo = UCS(start_point, end_point, Env)
-    UCSAlgo.imitate_environment()
-    UCSAlgo.run()
-    # print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
-    # print("UCS Algorithm 's Cost:", UCSAlgo.cost)
-
-
-    print("BFS Algorithm:")
-    BFSAlgo = BFS(start_point, end_point, Env)
-    BFSAlgo.imitate_environment()
-    BFSAlgo.run()
-
-    # R = Route(Env)
-    # R.run()
+    R = Route(Env)
+    R.run()
