@@ -11,6 +11,7 @@ from ucs import UCS
 from astar import ASTAR
 from bfs import BFS
 from route import Route
+import matplotlib.pyplot as plt
 
 
 import numpy as np
@@ -58,8 +59,9 @@ if __name__ == '__main__':
     print("A star Algorithm:")
     AstarAlgo.imitate_environment()
     AstarAlgo.run()
-    # print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
-    # print("A-star Algorithm 's Cost:", AstarAlgo.cost)
+
+    print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
+    print("A-star Algorithm 's Cost:", AstarAlgo.cost)
 
     print("UCS Algorithm:")
     UCSAlgo = UCS(start_point, end_point, Env)
@@ -74,5 +76,5 @@ if __name__ == '__main__':
     BFSAlgo.imitate_environment()
     BFSAlgo.run()
 
-    # R = Route(Env)
-    # R.run()
+    R = Route(Env)
+    R.run()
