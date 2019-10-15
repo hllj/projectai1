@@ -36,17 +36,17 @@ class ASTAR(Algorithm):
                 print("There is no path from {} to {}".format(self.start_point, self.end_point))
                 return []
             else:
-                print('Path from {} to {}:'.format(self.start_point, self.end_point))
                 trace_path = []
                 while (self.start_point != self.end_point):
                     trace_path.append(self.end_point)
                     self.end_point = self.trace[self.end_point]
 
                 trace_path.append(self.start_point)
-                print("Length path: ", len(trace_path) - 2)
                 return np.array(trace_path)
 
     def run(self, mode = 1):
+        if mode >= 0:
+            plt.title("A* Algorithm")
         time_start = time.time()
         pq = []
         heapq.heappush(pq, (self.f[self.start_point], self.start_point))
@@ -76,15 +76,15 @@ class ASTAR(Algorithm):
 
                         heapq.heappush(pq, (self.f[next_p], next_p))
                         self.trace[next_p] = p
-                        if mode :
+                        if mode ==1 :
                             plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
                             plt.pause(0.00000001)
         self.cost = self.d[self.end_point]
         self.timeProcessing = (time.time() - time_start)
 
-        if mode:
+        if mode >= 0 :
             path = self.output()
             self.E.draw_path(path)
-            plt.show()
+            # plt.show()
 
 

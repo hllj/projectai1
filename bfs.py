@@ -31,7 +31,8 @@ class BFS(Algorithm):
             print("Length path: ", len(trace_path) - 2)
             return np.array(trace_path)
 
-    def run(self):
+    def run(self,mode = 1):
+        plt.title("BFS Algorithm")
         time_start = time.time()
         Q = queue.Queue()
         Q.put(self.start_point)
@@ -47,10 +48,11 @@ class BFS(Algorithm):
                         self.fre[next_p] = 0
                         self.trace[next_p] = (px, py)
                         Q.put(next_p)
-                        plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
-                        plt.pause(0.00000001)
+                        if mode :
+                            plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
+                            plt.pause(0.00000001)
         self.timeProcessing = (time.time() - time_start)
         path = self.output()
         self.E.draw_path(path)
-        plt.show()
+        # plt.show()
 

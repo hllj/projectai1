@@ -12,13 +12,12 @@ from astar import ASTAR
 from bfs import BFS
 from route import Route
 import matplotlib.pyplot as plt
-
-
 import numpy as np
+import sys
+import getopt
 
-if __name__ == '__main__':
-
-    file = open("input.txt", "r")
+def readfile(fn):
+    file = open(fn, "r")
     all_content = file.readlines()
 
     xmax, ymax = map(int, all_content[0].split(','))
@@ -52,29 +51,49 @@ if __name__ == '__main__':
         print(polygon_coord)
         P = Polygon(polygon_coord)
         polygon_list_object = np.append(polygon_list_object, [P])
+    return xmax, ymax, start_point, end_point, polygon_list_object, place
+
+if __name__ == '__main__':
+
+    fn = "input.txt"
+    mode = 0
+
+
+    if (len(sys.argv)>2):
+        opts, args = getopt.getopt(sys.argv[1:], "i:o:")
+        print(opts)
+        print(args)
+        for opt, arg in opts:
+            if opt == '-i':
+                fn = arg
+            if opt == '-o':
+                mode = int(arg)
+
+    xmax, ymax, start_point, end_point, polygon_list_object, place = readfile(fn)
 
     Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
 
     AstarAlgo = ASTAR(start_point, end_point, Env)
     print("A star Algorithm:")
-    AstarAlgo.imitate_environment()
-    AstarAlgo.run()
+    AstarAlgo.imitate_environment(0)
+    AstarAlgo.run(mode)
 
     print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
     print("A-star Algorithm 's Cost:", AstarAlgo.cost)
 
     print("UCS Algorithm:")
     UCSAlgo = UCS(start_point, end_point, Env)
-    UCSAlgo.imitate_environment()
-    UCSAlgo.run()
-    # print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
-    # print("UCS Algorithm 's Cost:", UCSAlgo.cost)
+    UCSAlgo.imitate_environment(1)
+    UCSAlgo.run(mode)
+    print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
+    print("UCS Algorithm 's Cost:", UCSAlgo.cost)
 
 
     print("BFS Algorithm:")
     BFSAlgo = BFS(start_point, end_point, Env)
-    BFSAlgo.imitate_environment()
-    BFSAlgo.run()
+    BFSAlgo.imitate_environment(2)
+    BFSAlgo.run(mode)
 
     R = Route(Env)
     R.run()
+    plt.show()

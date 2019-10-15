@@ -23,8 +23,8 @@ class Algorithm():
         plt.scatter(self.end_point[0], self.end_point[1])
         plt.scatter(self.end_point[0], self.end_point[1] + 0.5, marker="$G$")
 
-    def imitate_environment(self):
-        self.E.draw_environment()
+    def imitate_environment(self, a_id):
+        self.E.draw_environment(a_id)
         self.draw_start_end()
         if (len(self.E.place) > 0):
             self.E.draw_place()

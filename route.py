@@ -38,7 +38,7 @@ class Route():
             for j in range(i + 1, n):
                 if i != j:
                     astarAlgo = ASTAR(self.all_point_list[i], self.all_point_list[j], self.E)
-                    astarAlgo.run(0)
+                    astarAlgo.run(-1)
                     self.matrix_cost[i][j] = astarAlgo.cost
                     self.matrix_cost[j][i] = self.matrix_cost[i][j]
                     self.matrix_path[i][j] = astarAlgo.output()
@@ -96,22 +96,18 @@ class Route():
 
 
     def run(self):
-        self.E.draw_environment()
+
+        self.E.draw_environment(3)
+        plt.title("Finding path through expected points")
         self.draw_start_end()
         self.E.draw_place()
-        # path_list = [self.matrix_path[0][1], self.matrix_path[1][2],
-        #              self.matrix_path[2][3], self.matrix_path[3][4], self.matrix_path[4][5]]
-        # cost = self.matrix_cost[0][1] + self.matrix_cost[1][2] + self.matrix_cost[2][3] + self.matrix_cost[3][4] + self.matrix_cost[4][5]
         path_list, cost = self.find_path_list()
         if (path_list, cost) == (None, None):
             print("There is no path through required points!")
         else:
-
-            print(path_list)
             for path in path_list:
                 self.E.draw_path(path)
 
             print("Total Cost %.2f" % (cost))
-            plt.show()
-        #self.E.end_draw()
+            # plt.show()
 

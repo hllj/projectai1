@@ -35,12 +35,13 @@ class Environment():
         return True
 
 
-    def draw_environment(self):
-        plt.figure()
+    def draw_environment(self, a_id):
+        plt.figure(a_id)
         plt.xlim(0, self.xmax)
         plt.ylim(0, self.ymax)
         plt.xticks(np.arange(0, self.xmax + 1, step=1))
         plt.yticks(np.arange(0, self.ymax + 1, step=1))
+        plt.grid()
         plt.gca().set_aspect('equal', adjustable='box')
 
         for polygon in self.polygon_list:
