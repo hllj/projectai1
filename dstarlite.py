@@ -166,6 +166,10 @@ class DStarLite(Algorithm):
             rhs_min = float('inf')
             x_next = -1
             y_next = -1
+            d = np.random.randint(3, size=(2, 1))
+            movingPolygon.erase()
+
+            movingPolygon.update(d[0] - 1, d[1] - 1, self.E)
             for i in range(8):
                 x = self.xstart + dx[i]
                 y = self.ystart + dy[i]
@@ -179,21 +183,14 @@ class DStarLite(Algorithm):
             self.xstart = x_next
             self.ystart = y_next
 
-            d = 0
-            if ratechange == 8:
-                ratechange = -5
-            if ratechange > 0:
-                d = 1
-            else:
-                d = -1
-            movingPolygon.erase()
-            movingPolygon.update(d)
-            ratechange +=1
+
+
+            # ratechange +=1
             movingPolygon.draw()
             # line.pop(0).remove()
 
-            line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
-            # p.remove()
+            # line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
+            p.remove()
             p = plt.scatter(self.xstart, self.ystart)
             # plt.pause(1)
             # print("toa do {0} {1}".format(self.xstart,self.ystart))
@@ -222,10 +219,10 @@ class DStarLite(Algorithm):
 
 
 
-            plt.pause(1)
+            plt.pause(0.3)
 
-            self.E.polygon_list[-1].draw()
-            #
+            # self.E.polygon_list[-1].draw()
+
             self.ComputeShortestPath()
             movingPolygonOld = movingPolygon
         # plt.show()
