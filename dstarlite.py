@@ -4,12 +4,17 @@ import time
 import heapq
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
 # dx = [-1,0,1,0]
 # dy = [0,-1,0,1]
+
+
+
+
 
 class DStarLite(Algorithm):
     def __init__(self, start_point, end_point, ENV):
@@ -34,7 +39,7 @@ class DStarLite(Algorithm):
         self.rhs[self.end_point] = 0
         heapq.heappush(self.queue, self.calKey(end_point) + end_point)
 
-        for xy in self.E.polygon_list[self.numberOfPolygon - 1]:
+        for xy in self.E.polygon_list[-1].coord:
             (x, y) = xy
             self.xLeft = min(self.xLeft, x)
             self.yLeft = min(self.yLeft, y)
@@ -135,12 +140,29 @@ class DStarLite(Algorithm):
     def run(self):
         xlast = self.xstart
         ylast = self.ystart
+        plast = (xlast, ylast)
         self.ComputeShortestPath()
 
-        movingPolygon = self.E.polygon_list[self.numberOfPolygon - 1]
+        fig = plt.figure()
+        plt.xlim(0, self.E.xmax)
+        plt.ylim(0, self.E.ymax)
+        plt.xticks(np.arange(0, self.E.xmax + 1, step=1))
+        plt.yticks(np.arange(0, self.E.ymax + 1, step=1))
+        plt.grid()
+        plt.gca().set_aspect('equal', adjustable='box')
+
+        self.draw_start_end()
+        for polygon in self.E.polygon_list:
+            p = polygon.draw()
+
+        ratechange = 0
+        movingPolygon = self.E.polygon_list[1]
         movingPolygonOld = movingPolygon
+        p = plt.scatter(self.xstart, self.ystart)
+        line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
 
         while (self.xstart, self.ystart) != self.end_point:
+
             rhs_min = float('inf')
             x_next = -1
             y_next = -1
@@ -157,10 +179,30 @@ class DStarLite(Algorithm):
             self.xstart = x_next
             self.ystart = y_next
 
+            d = 0
+            if ratechange == 8:
+                ratechange = -5
+            if ratechange > 0:
+                d = 1
+            else:
+                d = -1
+            movingPolygon.erase()
+            movingPolygon.update(d)
+            ratechange +=1
+            movingPolygon.draw()
+            # line.pop(0).remove()
+
+            line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
+            # p.remove()
+            p = plt.scatter(self.xstart, self.ystart)
+            # plt.pause(1)
+            # print("toa do {0} {1}".format(self.xstart,self.ystart))
+
             # CẬP NHẬT ĐA GIÁC Ở ĐÂY
+
             #----------------------
             #
-            movingPolygon = self.E.polygon_list[self.numberOfPolygon - 1]
+            # movingPolygon = self.E.polygon_list[-1]
             # update
             for i in range(self.xLeft, self.xRight + 1):
                 for j in range(self.yLeft, self.yRight + 1):
@@ -173,16 +215,20 @@ class DStarLite(Algorithm):
                                     self.updateVertex((i, j))
 
             self.km = self.km + self.heuristic((xlast, ylast), (self.xstart, self.ystart))
-            # plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
-            # plt.pause(0.00000001)
+
+
 
             (xlast, ylast) = (self.xstart, self.ystart)
 
-            # VẼ ĐƯỜNG ĐI VÀ ĐA GIÁC DI CHUYỂN Ở ĐÂY:
-            #----------------------------------------
+
+
+            plt.pause(1)
+
+            self.E.polygon_list[-1].draw()
             #
             self.ComputeShortestPath()
             movingPolygonOld = movingPolygon
-        plt.show()
+        # plt.show()
+
 
 

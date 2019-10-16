@@ -32,14 +32,33 @@ class Polygon():
         self.coord = coord
         self.n_coord = len(coord)
         self.area = self.area_cal()
+        plt = None
 
     def draw(self):
         point_list = self.coord
         point_list = np.append(point_list, [self.coord[0]], axis=0)
         # print(point_list)
         xs, ys = zip(*point_list)
-        # plt.figure()
-        plt.plot(xs, ys)
+        self.plt = plt.plot(xs, ys,color = 'g')
+
+
+    def erase(self ):
+        l = self.plt.pop(0)
+        l.remove()
+
+
+
+    def update(self,d):
+
+        points = []
+
+
+        for i in self.coord :
+            x,y = i
+            x += d
+            points.append((x,y))
+        self.coord = points
+
 
     def area_cal(self):
         area_polygon = 0
