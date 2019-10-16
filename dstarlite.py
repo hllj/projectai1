@@ -9,8 +9,8 @@ from matplotlib.animation import FuncAnimation
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
-# dx = [-1,0,1,0]
-# dy = [0,-1,0,1]
+d2x = [-1,0,1,0]
+d2y = [0,-1,0,1]
 
 
 
@@ -138,6 +138,7 @@ class DStarLite(Algorithm):
         pass
 
     def run(self):
+        # np.random.seed(2)
         xlast = self.xstart
         ylast = self.ystart
         plast = (xlast, ylast)
@@ -166,10 +167,8 @@ class DStarLite(Algorithm):
             rhs_min = float('inf')
             x_next = -1
             y_next = -1
-            d = np.random.randint(3, size=(2, 1))
-            movingPolygon.erase()
 
-            movingPolygon.update(d[0] - 1, d[1] - 1, self.E)
+            self.E.polygon_list[1] = movingPolygon
             for i in range(8):
                 x = self.xstart + dx[i]
                 y = self.ystart + dy[i]
@@ -183,8 +182,11 @@ class DStarLite(Algorithm):
             self.xstart = x_next
             self.ystart = y_next
 
+            r = np.random.random(1)
+            d = int(r[0] * 10) % 4
+            movingPolygon.erase()
 
-
+            movingPolygon.update(d2x[d], d2y[d], self.E, (self.xstart, self.ystart))
             # ratechange +=1
             movingPolygon.draw()
             # line.pop(0).remove()
@@ -204,7 +206,7 @@ class DStarLite(Algorithm):
             for i in range(self.xLeft, self.xRight + 1):
                 for j in range(self.yLeft, self.yRight + 1):
                     if self.E.is_valid_point((i, j)):
-                        for k in range(4):
+                        for k in range(8):
                             u = i + dx[k]
                             v = j + dy[k]
                             if u >= self.xLeft and u <= self.xRight and v >= self.yLeft and v <= self.yRight:

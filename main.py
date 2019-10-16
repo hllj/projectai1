@@ -74,8 +74,13 @@ if __name__ == '__main__':
 
     Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
 
+    np.random.seed(3)
+    xmax, ymax, start_point, end_point, polygon_list_object, place = readfile(fn)
+
+    Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
     dsl = DStarLite(start_point,end_point,Env)
     dsl.run()
+
 
 
     # AstarAlgo = ASTAR(start_point, end_point, Env)

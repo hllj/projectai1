@@ -48,8 +48,9 @@ class Polygon():
 
 
 
-    def update(self,dx,dy,E):
-
+    def update(self,dx,dy,E,cur):
+        t = self.coord
+        xs,ys = cur
         points = []
         kt = True
         for i in self.coord :
@@ -62,12 +63,18 @@ class Polygon():
                     return False
                 if poly.is_cut((x,y),(x+dx,y+dy)) :
                     return  False
+
             points.append((x+dx,y+dy))
         print("di chuyen ")
         print(dx, dy)
 
+
         self.coord = points
-        return  True
+        if self.is_inside(cur) :
+            self.coord= t
+            return  False
+        else :
+            return  True
 
     def area_cal(self):
         area_polygon = 0
