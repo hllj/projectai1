@@ -41,6 +41,9 @@ class DStarLite(Algorithm):
             self.xRight = max(self.xRight, x)
             self.yRight = max(self.yRight, y)
 
+        self.xRight += self.speedChangeX
+        self.yRight += self.speedChangeY
+
     def heuristic(self, a, b):
         (x1, y1) = a
         (x2, y2) = b
@@ -62,6 +65,8 @@ class DStarLite(Algorithm):
         if (self.E.is_valid_move(a, b) == False):
             return float('inf')
         # kiem tra o trong polygon return inf
+        if (self.E.is_valid_point(b) == False):
+            return float('inf')
         return np.sqrt(np.power(x1 - x2, 2) + np.power(y1 - y2, 2))
 
     def updateVertex(self, u):
@@ -132,6 +137,9 @@ class DStarLite(Algorithm):
         ylast = self.ystart
         self.ComputeShortestPath()
 
+        movingPolygon = self.E.polygon_list[self.numberOfPolygon - 1]
+        movingPolygonOld = movingPolygon
+
         while (self.xstart, self.ystart) != self.end_point:
             rhs_min = float('inf')
             x_next = -1
@@ -149,14 +157,32 @@ class DStarLite(Algorithm):
             self.xstart = x_next
             self.ystart = y_next
 
+            # CẬP NHẬT ĐA GIÁC Ở ĐÂY
+            #----------------------
+            #
+            movingPolygon = self.E.polygon_list[self.numberOfPolygon - 1]
             # update
-            for i in range
+            for i in range(self.xLeft, self.xRight + 1):
+                for j in range(self.yLeft, self.yRight + 1):
+                    if self.E.is_valid_point((i, j)):
+                        for k in range(4):
+                            u = i + dx[k]
+                            v = j + dy[k]
+                            if u >= self.xLeft and u <= self.xRight and v >= self.yLeft and v <= self.yRight:
+                                if movingPolygon.is_inside((u, v)) != movingPolygonOld.is_inside((u, v)):
+                                    self.updateVertex((i, j))
+
             self.km = self.km + self.heuristic((xlast, ylast), (self.xstart, self.ystart))
-            plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
-            plt.pause(0.00000001)
+            # plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
+            # plt.pause(0.00000001)
 
             (xlast, ylast) = (self.xstart, self.ystart)
+
+            # VẼ ĐƯỜNG ĐI VÀ ĐA GIÁC DI CHUYỂN Ở ĐÂY:
+            #----------------------------------------
+            #
             self.ComputeShortestPath()
+            movingPolygonOld = movingPolygon
         plt.show()
 
 
