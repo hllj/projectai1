@@ -5,6 +5,7 @@ import heapq
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+from object import Polygon
 
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
@@ -158,7 +159,7 @@ class DStarLite(Algorithm):
 
         ratechange = 0
         movingPolygon = self.E.polygon_list[1]
-        movingPolygonOld = movingPolygon
+        movingPolygonOld = Polygon(movingPolygon.coord)
         p = plt.scatter(self.xstart, self.ystart)
         line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
 
@@ -168,7 +169,7 @@ class DStarLite(Algorithm):
             x_next = -1
             y_next = -1
 
-            self.E.polygon_list[1] = movingPolygon
+
             for i in range(8):
                 x = self.xstart + dx[i]
                 y = self.ystart + dy[i]
@@ -181,13 +182,17 @@ class DStarLite(Algorithm):
             if (x_next, y_next) == (-1, -1) or rhs_min == float('inf'): break
             self.xstart = x_next
             self.ystart = y_next
-
-            r = np.random.random(1)
-            d = int(r[0] * 10) % 4
             movingPolygon.erase()
+            cnt = 0
+            while True:
+                cnt += 1
+                r = np.random.random(1)
+                d = int(r[0] * 8) % 8
+                if movingPolygon.update(dx[d], dy[d], self.E, (self.xstart, self.ystart)): break
+                print("In while loop:", cnt)
+            self.E.polygon_list[1] = movingPolygon
 
-            movingPolygon.update(d2x[d], d2y[d], self.E, (self.xstart, self.ystart))
-            # ratechange +=1
+
             movingPolygon.draw()
             # line.pop(0).remove()
 
@@ -203,31 +208,26 @@ class DStarLite(Algorithm):
             #
             # movingPolygon = self.E.polygon_list[-1]
             # update
-            for i in range(self.xLeft, self.xRight + 1):
-                for j in range(self.yLeft, self.yRight + 1):
+            for i in range(1, self.E.xmax):
+                for j in range(1, self.E.ymax):
                     if self.E.is_valid_point((i, j)):
                         for k in range(8):
                             u = i + dx[k]
                             v = j + dy[k]
-                            if u >= self.xLeft and u <= self.xRight and v >= self.yLeft and v <= self.yRight:
+                            if u >= 1 and u < self.E.xmax and v >= 1 and v < self.E.ymax:
                                 if movingPolygon.is_inside((u, v)) != movingPolygonOld.is_inside((u, v)):
+                                    # print("Moving Polygon is inside !!!")
                                     self.updateVertex((i, j))
 
             self.km = self.km + self.heuristic((xlast, ylast), (self.xstart, self.ystart))
 
-
-
             (xlast, ylast) = (self.xstart, self.ystart)
-
-
-
-            plt.pause(0.3)
+            plt.pause(0.05)
 
             # self.E.polygon_list[-1].draw()
-
             self.ComputeShortestPath()
-            movingPolygonOld = movingPolygon
-        # plt.show()
+            movingPolygonOld = Polygon(movingPolygon.coord)
+        plt.show()
 
 
 

@@ -55,4 +55,4 @@ class Environment():
 
     def draw_path(self, path):
         xs, ys = zip(*path)
-        plt.plot(xs, ys, color='b')
+        plt.plot(xs, ys)
