@@ -70,8 +70,8 @@ class Polygon():
 
 
         self.coord = points
-        # return True
-        if self.is_inside(cur) :
+
+        if self.is_inside(cur) or self.is_inside(E.end_point) :
             self.coord= t
             return  False
         else :
