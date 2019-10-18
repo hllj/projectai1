@@ -5,49 +5,31 @@ import heapq
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
-
+from object import Polygon
+import time
 WMAX = 1e3
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
 d2x = [-1,0,1,0]
 d2y = [0,-1,0,1]
 
-
-
-
-
 class DStarLite(Algorithm):
     def __init__(self, start_point, end_point, ENV):
         super().__init__(start_point, end_point, ENV)
-        self.speedChangeX = 1
-        self.speedChangeY = 0
-        self.xLeft = self.E.xmax
-        self.yLeft = self.E.ymax
-        self.xRight = 0
-        self.yRight = 0
         self.numberOfPolygon = len(self.E.polygon_list)
         self.g = {}
         self.rhs = {}
         self.queue = []
         self.km = 0
-        (self.xstart, self.ystart) = start_point
+        (self.xstart, self.ystart) = self.start_point
+
         for i in range(self.E.xmax + 1):
             for j in range(self.E.ymax + 1):
                 self.g[(i, j)] = float('inf')
                 self.rhs[(i, j)] = float('inf')
 
         self.rhs[self.end_point] = 0
-        heapq.heappush(self.queue, self.calKey(end_point) + end_point)
-
-        for xy in self.E.polygon_list[-1].coord:
-            (x, y) = xy
-            self.xLeft = min(self.xLeft, x)
-            self.yLeft = min(self.yLeft, y)
-            self.xRight = max(self.xRight, x)
-            self.yRight = max(self.yRight, y)
-
-        self.xRight += self.speedChangeX
-        self.yRight += self.speedChangeY
+        heapq.heappush(self.queue, self.calKey(self.end_point) + self.end_point)
 
     def heuristic(self, a, b):
         (x1, y1) = a
@@ -63,25 +45,23 @@ class DStarLite(Algorithm):
         return (float('inf'), float('inf'))
 
     def distance(self, a, b):
-        global rate_change
         x1, y1 = a
         x2, y2 = b
 
-        if (self.E.is_valid_move(a, b) == False):
-            return float('inf')
-        # kiem tra o trong polygon return inf
-        if (self.E.is_valid_point(b) == False):
+        if (self.E.is_valid_point(b) == False or self.E.is_valid_point(a) == False):
             return float('inf')
         return np.sqrt(np.power(x1 - x2, 2) + np.power(y1 - y2, 2))
 
     def updateVertex(self, u):
         if (u != self.end_point):
             (x, y) = u
+            minRhs = float('inf')
             for i in range(8):
                 x_next = x + dx[i]
                 y_next = y + dy[i]
-                if (self.E.is_valid_point((x_next, y_next))):
-                    self.rhs[u] = min(self.rhs[u], self.g[(x_next, y_next)] + self.distance(u, (x_next, y_next)))
+                if (x_next > 0 and x_next < self.E.xmax and y_next > 0 and y_next < self.E.ymax):
+                    minRhs = min(minRhs, self.g[(x_next, y_next)] + self.distance(u, (x_next, y_next)))
+            self.rhs[u] = minRhs
 
         id_in_queue = (-1, -1, -1, -1)
         for i in self.queue:
@@ -95,18 +75,22 @@ class DStarLite(Algorithm):
             heapq.heappush(self.queue, self.calKey(u) + u)
 
     def ComputeShortestPath(self):
+
         while (self.topKey() < self.calKey((self.xstart, self.ystart)) or self.rhs[(self.xstart, self.ystart)] != self.g[(self.xstart, self.ystart)]):
             k_old = self.topKey()
             u = heapq.heappop(self.queue)
             (x, y) = (u[2], u[3])
+
             if (k_old < self.calKey((x, y))):
+
                 heapq.heappush(self.queue, self.calKey((x, y)) + (x, y))
             elif self.g[(x, y)] > self.rhs[(x, y)]:
+
                 self.g[(x, y)] = self.rhs[(x, y)]
                 for i in range(8):
                     x_next = x + dx[i]
                     y_next = y + dy[i]
-                    if (self.E.is_valid_point((x_next, y_next))):
+                    if 0 < x_next < self.E.xmax and 0 < y_next < self.E.ymax:
                         self.updateVertex((x_next, y_next))
             else:
                 self.g[(x, y)] = float('inf')
@@ -114,28 +98,61 @@ class DStarLite(Algorithm):
                 for i in range(8):
                     x_next = x + dx[i]
                     y_next = y + dy[i]
-                    if (self.E.is_valid_point((x_next, y_next))):
+                    if 0 < x_next < self.E.xmax and 0 < y_next < self.E.ymax:
                         self.updateVertex((x_next, y_next))
 
-    def output(self):
-        # if (self.trace[self.end_point] == -1):
-        #     print("There is no path from {} to {}".format(self.start_point, self.end_point))
-        #     return []
-        # else:
-        #     if (self.trace[self.end_point] == -1):
-        #         print("There is no path from {} to {}".format(self.start_point, self.end_point))
-        #         return []
-        #     else:
-        #         print('Path from {} to {}:'.format(self.start_point, self.end_point))
-        #         trace_path = []
-        #         while (self.start_point != self.end_point):
-        #             trace_path.append(self.end_point)
-        #             self.end_point = self.trace[self.end_point]
-        #
-        #         trace_path.append(self.start_point)
-        #         print("Length path: ", len(trace_path) - 2)
-        #         return np.array(trace_path)
-        pass
+
+    def scanForChange(self, movingPolygon, movingPolygonOld):
+        updateQueue = {}
+        count = 0
+        for k in range(8):
+            u = self.xstart + dx[k]
+            v = self.ystart + dy[k]
+            if 0 < u < self.E.xmax and 0 < v < self.E.ymax:
+                updateQueue[count] = (u, v)
+                count += 1
+
+        rangeCheck = 1
+        scanRange = 8
+        while rangeCheck < scanRange:
+            newQueue = {}
+            cnt = 0
+            for i in range(count):
+                x, y = updateQueue[i]
+                for k in range(8):
+                    u = x + dx[k]
+                    v = y + dy[k]
+                    if 0 < u < self.E.xmax and 0 < v < self.E.ymax:
+                        exsisted = False
+                        for j in range(count):
+                            if (u, v) == updateQueue[j]:
+                                exsisted = True
+                                break
+                        if exsisted == False:
+                            newQueue[cnt] = (u, v)
+                            cnt += 1
+            for i in range(cnt):
+                exsisted = False
+                for j in range(count):
+                    if newQueue[i] == updateQueue[j]:
+                        exsisted = True
+                        break
+                if exsisted == False:
+                    updateQueue[count] = newQueue[i]
+                    count += 1
+            rangeCheck += 1
+
+        costIsChange = False
+        for i in range(count):
+            x, y = updateQueue[i]
+            for k in range(8):
+                u = x + dx[k]
+                v = y + dy[k]
+                if 0 < u < self.E.xmax and 0 < v < self.E.ymax:
+                    if movingPolygon.is_inside((u, v)) != movingPolygonOld.is_inside((u, v)):
+                        self.updateVertex(updateQueue[i])
+                        costIsChange = True
+        return costIsChange
 
     def run(self):
         # np.random.seed(2)
@@ -156,19 +173,19 @@ class DStarLite(Algorithm):
         for polygon in self.E.polygon_list:
             p = polygon.draw()
 
-        ratechange = 0
         movingPolygon = self.E.polygon_list[1]
         movingPolygonOld = movingPolygon
         p = plt.scatter(self.xstart, self.ystart)
         line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
 
         while (self.xstart, self.ystart) != self.end_point:
-
+            if self.g[(self.xstart, self.ystart)] == float('inf'):
+                break
             rhs_min = float('inf')
             x_next = -1
             y_next = -1
-
             self.E.polygon_list[1] = movingPolygon
+            self.qua = True
             for i in range(8):
                 x = self.xstart + dx[i]
                 y = self.ystart + dy[i]
@@ -178,56 +195,38 @@ class DStarLite(Algorithm):
                         y_next = y
                         rhs_min = self.distance((self.xstart, self.ystart), (x, y)) + self.g[(x, y)]
 
-            if (x_next, y_next) == (-1, -1) or rhs_min == float('inf'): break
+            # if (movingPolygon.is_inside((x_next, y_next)) == False):
             self.xstart = x_next
             self.ystart = y_next
 
             r = np.random.random(1)
             d = int(r[0] * 10) % 4
             movingPolygon.erase()
-
             movingPolygon.update(d2x[d], d2y[d], self.E, (self.xstart, self.ystart))
-            # ratechange +=1
             movingPolygon.draw()
-            # line.pop(0).remove()
-
-            # line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
             p.remove()
             p = plt.scatter(self.xstart, self.ystart)
-            # plt.pause(1)
-            # print("toa do {0} {1}".format(self.xstart,self.ystart))
 
-            # CẬP NHẬT ĐA GIÁC Ở ĐÂY
-
-            #----------------------
-            #
-            # movingPolygon = self.E.polygon_list[-1]
-            # update
-            for i in range(self.xLeft, self.xRight + 1):
-                for j in range(self.yLeft, self.yRight + 1):
-                    if self.E.is_valid_point((i, j)):
-                        for k in range(8):
-                            u = i + dx[k]
-                            v = j + dy[k]
-                            if u >= self.xLeft and u <= self.xRight and v >= self.yLeft and v <= self.yRight:
-                                if movingPolygon.is_inside((u, v)) != movingPolygonOld.is_inside((u, v)):
-                                    self.updateVertex((i, j))
-
+            # UPDATE COST CHANGED
             self.km = self.km + self.heuristic((xlast, ylast), (self.xstart, self.ystart))
+            start_time = time.time()
+            costIsChange = self.scanForChange(movingPolygon, movingPolygonOld)
+            end_time = time.time()
+            print('scan: %f ms' % ((end_time - start_time) * 1000))
 
+            if costIsChange == False:
+                self.km = self.km - self.heuristic((xlast, ylast), (self.xstart, self.ystart))
+            else:
+                (xlast, ylast) = (self.xstart, self.ystart)
+                start_time = time.time()
+                self.ComputeShortestPath()
+                end_time = time.time()
+                print('compute: %f ms' % ((end_time - start_time) * 1000))
 
+            plt.pause(0.000001)
+            movingPolygonOld = Polygon(movingPolygon.coord)
 
-            (xlast, ylast) = (self.xstart, self.ystart)
-
-
-
-            plt.pause(0.3)
-
-            # self.E.polygon_list[-1].draw()
-
-            self.ComputeShortestPath()
-            movingPolygonOld = movingPolygon
-        # plt.show()
+        plt.show()
 
 
 

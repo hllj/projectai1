@@ -18,7 +18,6 @@ class Environment():
         self.place = place;
 
     def is_valid_point(self, point):
-
         x, y = point
         if ((x <= 0) | (y <= 0) | (x >= self.xmax) | (y >= self.ymax)):
             return False

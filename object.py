@@ -65,8 +65,8 @@ class Polygon():
                     return  False
 
             points.append((x+dx,y+dy))
-        print("di chuyen ")
-        print(dx, dy)
+        # print("di chuyen ")
+        # print(dx, dy)
 
 
         self.coord = points
