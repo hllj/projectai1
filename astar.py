@@ -84,7 +84,8 @@ class ASTAR(Algorithm):
 
         if mode >= 0 :
             path = self.output()
-            self.E.draw_path(path)
+            if (len(path) > 0):
+                self.E.draw_path(path)
             # plt.show()
 
 

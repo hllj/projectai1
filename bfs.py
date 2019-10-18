@@ -52,7 +52,9 @@ class BFS(Algorithm):
                             plt.plot((px, px + dx[i]), (py, py + dy[i]), color='r')
                             plt.pause(0.00000001)
         self.timeProcessing = (time.time() - time_start)
-        path = self.output()
-        self.E.draw_path(path)
-        # plt.show()
+        if mode >= 0:
+            path = self.output()
+            if (len(path) > 0):
+                self.E.draw_path(path)
+            # plt.show()
 

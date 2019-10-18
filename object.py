@@ -70,6 +70,7 @@ class Polygon():
 
 
         self.coord = points
+        # return True
         if self.is_inside(cur) :
             self.coord= t
             return  False

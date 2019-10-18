@@ -105,8 +105,9 @@ class Route():
         if (path_list, cost) == (None, None):
             print("There is no path through required points!")
         else:
-            for path in path_list:
+            for path in reversed(path_list):
                 self.E.draw_path(path)
+                plt.pause(0.5)
 
             print("Total Cost %.2f" % (cost))
             # plt.show()

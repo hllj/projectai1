@@ -6,8 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 from object import Polygon
-import time
-WMAX = 1e3
+
 dx = [-1, 0, 1, 1, 1, 0, -1, -1]
 dy = [1, 1, 1, 0, -1, -1, -1, 0]
 d2x = [-1,0,1,0]
@@ -82,7 +81,6 @@ class DStarLite(Algorithm):
             (x, y) = (u[2], u[3])
 
             if (k_old < self.calKey((x, y))):
-
                 heapq.heappush(self.queue, self.calKey((x, y)) + (x, y))
             elif self.g[(x, y)] > self.rhs[(x, y)]:
 
@@ -174,18 +172,18 @@ class DStarLite(Algorithm):
             p = polygon.draw()
 
         movingPolygon = self.E.polygon_list[1]
-        movingPolygonOld = movingPolygon
+        movingPolygonOld = Polygon(movingPolygon.coord)
         p = plt.scatter(self.xstart, self.ystart)
         line = plt.plot((xlast, self.xstart), (ylast, self.ystart), color='r')
 
         while (self.xstart, self.ystart) != self.end_point:
             if self.g[(self.xstart, self.ystart)] == float('inf'):
                 break
+
             rhs_min = float('inf')
             x_next = -1
             y_next = -1
-            self.E.polygon_list[1] = movingPolygon
-            self.qua = True
+
             for i in range(8):
                 x = self.xstart + dx[i]
                 y = self.ystart + dy[i]
@@ -195,37 +193,37 @@ class DStarLite(Algorithm):
                         y_next = y
                         rhs_min = self.distance((self.xstart, self.ystart), (x, y)) + self.g[(x, y)]
 
-            # if (movingPolygon.is_inside((x_next, y_next)) == False):
+            plt.plot((self.xstart, x_next), (self.ystart, y_next), color='r')
+
             self.xstart = x_next
             self.ystart = y_next
 
-            r = np.random.random(1)
-            d = int(r[0] * 10) % 4
             movingPolygon.erase()
-            movingPolygon.update(d2x[d], d2y[d], self.E, (self.xstart, self.ystart))
+            cnt = 0
+            while True:
+                cnt += 1
+                r = np.random.random(1)
+                d = int(r[0] * 8) % 8
+                if movingPolygon.update(dx[d], dy[d], self.E, (self.xstart, self.ystart)): break
+                print("In while loop:", cnt)
+            self.E.polygon_list[1] = movingPolygon
+
             movingPolygon.draw()
             p.remove()
             p = plt.scatter(self.xstart, self.ystart)
 
             # UPDATE COST CHANGED
             self.km = self.km + self.heuristic((xlast, ylast), (self.xstart, self.ystart))
-            start_time = time.time()
             costIsChange = self.scanForChange(movingPolygon, movingPolygonOld)
-            end_time = time.time()
-            print('scan: %f ms' % ((end_time - start_time) * 1000))
 
             if costIsChange == False:
                 self.km = self.km - self.heuristic((xlast, ylast), (self.xstart, self.ystart))
             else:
                 (xlast, ylast) = (self.xstart, self.ystart)
-                start_time = time.time()
                 self.ComputeShortestPath()
-                end_time = time.time()
-                print('compute: %f ms' % ((end_time - start_time) * 1000))
 
             plt.pause(0.000001)
             movingPolygonOld = Polygon(movingPolygon.coord)
-
         plt.show()
 
 
