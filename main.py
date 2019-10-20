@@ -11,6 +11,7 @@ from ucs import UCS
 from astar import ASTAR
 from bfs import BFS
 from route import Route
+from dstarlite import DStarLite
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
@@ -57,43 +58,60 @@ if __name__ == '__main__':
 
     fn = "input.txt"
     mode = 0
-
+    algo = 'all'
+    ## algorithm astar, bfs, ucs, fp, dsl
 
     if (len(sys.argv)>2):
-        opts, args = getopt.getopt(sys.argv[1:], "i:o:")
-        print(opts)
-        print(args)
+        opts, args = getopt.getopt(sys.argv[1:], "i:o:a:")
         for opt, arg in opts:
             if opt == '-i':
                 fn = arg
             if opt == '-o':
                 mode = int(arg)
+            if opt == '-a':
+                algo = arg
 
     xmax, ymax, start_point, end_point, polygon_list_object, place = readfile(fn)
 
     Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
 
-    AstarAlgo = ASTAR(start_point, end_point, Env)
-    print("A star Algorithm:")
-    AstarAlgo.imitate_environment(0)
-    AstarAlgo.run(mode)
 
-    print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
-    print("A-star Algorithm 's Cost:", AstarAlgo.cost)
+    xmax, ymax, start_point, end_point, polygon_list_object, place = readfile(fn)
 
-    print("UCS Algorithm:")
-    UCSAlgo = UCS(start_point, end_point, Env)
-    UCSAlgo.imitate_environment(1)
-    UCSAlgo.run(mode)
-    print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
-    print("UCS Algorithm 's Cost:", UCSAlgo.cost)
+    Env = Environment(xmax, ymax, start_point, end_point, polygon_list_object, place)
 
+    if algo == 'all' or algo == 'astar':
+        AstarAlgo = ASTAR(start_point, end_point, Env)
+        print("A star Algorithm:")
+        AstarAlgo.imitate_environment(0)
+        AstarAlgo.run(mode)
+        print("Time processing of A* : %.2f" % (AstarAlgo.timeProcessing))
+        print("A-star Algorithm 's Cost:", AstarAlgo.cost)
 
-    print("BFS Algorithm:")
-    BFSAlgo = BFS(start_point, end_point, Env)
-    BFSAlgo.imitate_environment(2)
-    BFSAlgo.run(mode)
+    if algo == 'all' or algo == 'ucs':
+        print("UCS Algorithm:")
+        UCSAlgo = UCS(start_point, end_point, Env)
+        UCSAlgo.imitate_environment(1)
+        UCSAlgo.run(mode)
+        print("Time processing of UCS : %.2f" % (UCSAlgo.timeProcessing))
+        print("UCS Algorithm 's Cost:", UCSAlgo.cost)
 
-    R = Route(Env)
-    R.run()
+    if algo == 'all' or algo == 'bfs':
+        print("BFS Algorithm:")
+        BFSAlgo = BFS(start_point, end_point, Env)
+        BFSAlgo.imitate_environment(2)
+        BFSAlgo.run(mode)
+
+    if algo == 'all' or algo == 'fp':
+        if len(Env.place) > 0:
+            R = Route(Env)
+            R.run()
+        else:
+            print("Input did not give expected points to find path!")
+
+    if algo == 'all' or algo == 'dsl':
+        # np.random.seed(2)
+        dsl = DStarLite(start_point,end_point,Env)
+        dsl.run()
+
     plt.show()

@@ -62,6 +62,8 @@ class UCS(Algorithm):
         self.cost = self.d[self.end_point]
         self.timeProcessing = (time.time() - time_start)
 
-        path = self.output()
-        self.E.draw_path(path)
-        # plt.show()
+        if mode >= 0:
+            path = self.output()
+            if (len(path) > 0):
+                self.E.draw_path(path)
+            # plt.show()

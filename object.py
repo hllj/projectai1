@@ -32,14 +32,50 @@ class Polygon():
         self.coord = coord
         self.n_coord = len(coord)
         self.area = self.area_cal()
+        plt = None
 
     def draw(self):
         point_list = self.coord
         point_list = np.append(point_list, [self.coord[0]], axis=0)
         # print(point_list)
         xs, ys = zip(*point_list)
-        # plt.figure()
-        plt.plot(xs, ys)
+        self.plt = plt.plot(xs, ys,color = 'g')
+
+
+    def erase(self ):
+        l = self.plt.pop(0)
+        l.remove()
+
+
+
+    def update(self,dx,dy,E,cur):
+        t = self.coord
+        xs,ys = cur
+        points = []
+        kt = True
+        for i in self.coord :
+
+            x,y = i
+            for poly in E.polygon_list:
+                if poly == self :
+                    continue
+                if poly.is_inside((x+dx,y+dy)):
+                    return False
+                if poly.is_cut((x,y),(x+dx,y+dy)) :
+                    return  False
+
+            points.append((x+dx,y+dy))
+        # print("di chuyen ")
+        # print(dx, dy)
+
+
+        self.coord = points
+
+        if self.is_inside(cur) or self.is_inside(E.end_point) :
+            self.coord= t
+            return  False
+        else :
+            return  True
 
     def area_cal(self):
         area_polygon = 0

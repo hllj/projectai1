@@ -18,7 +18,6 @@ class Environment():
         self.place = place;
 
     def is_valid_point(self, point):
-
         x, y = point
         if ((x <= 0) | (y <= 0) | (x >= self.xmax) | (y >= self.ymax)):
             return False
@@ -55,4 +54,4 @@ class Environment():
 
     def draw_path(self, path):
         xs, ys = zip(*path)
-        plt.plot(xs, ys, color='b')
+        plt.plot(xs, ys)
